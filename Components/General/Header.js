@@ -1,8 +1,9 @@
 import React, { useContext } from "react"
 import { StyleSheet, View, Text } from 'react-native'
 import { useSafeAreaInsets } from "react-native-safe-area-context"
-import { AppContext } from "../Context/AppContext"
-import Colors from "../Style/Colors"
+import { AppContext } from "../../Context/AppContext"
+import Colors from "../../Style/Colors"
+import TextTitle from "../Text/TextTitle"
 
 export default function Header() {
 
@@ -12,7 +13,7 @@ export default function Header() {
     return (
         <View style={{...styles.header, paddingTop: safeAreaInsets.top + 18}}>
             <View>
-                <Text style={styles.logo}>Mr. Bin</Text>
+                <TextTitle style={styles.logo}>Mr. Bin</TextTitle>
                 <Text style={styles.city}>{ctx.location}</Text>
             </View>
             <Text>
@@ -30,13 +31,14 @@ const styles = StyleSheet.create({
         justifyContent: "space-between",
         alignItems: "center",
         paddingHorizontal: 24,
-        paddingBottom: 24
+        paddingBottom: 24,
+        shadowColor: Colors.black,
+        shadowOffset: {width: 0, height: -3},
+        shadowOpacity: 0.05,
+        shadowRadius: 10,
     },
     logo: {
-        fontSize: 20,
         color: Colors.mainGreen,
-        fontWeight: "bold",
-        fontFamily: "SergioTrendy-Regular"
     },
     city: {
         color: Colors.middleGreen

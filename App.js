@@ -3,12 +3,12 @@ import React, { useContext, useState } from 'react';
 import { Button, StyleSheet, Text, View } from 'react-native';
 import { AppContext, AppContextValue } from './Context/AppContext';
 import ContextTestView from './Components/ContextTestView';
-import Header from './Components/Header';
 import Colors from './Style/Colors';
 import BodyContainer from './Components/Helpers/BodyContainer';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { useFonts } from 'expo-font';
 import SergioTrendyRegular from './assets/fonts/SergioTrendy/SergioTrendy-Regular.ttf'
+import PlanningView from './Components/Views/PlanningView';
 
 export default function App() {
 
@@ -23,25 +23,11 @@ export default function App() {
         {(!areFontsLoaded) ?
           <Text>Loading...</Text>
           :
-          <View style={styles.container}>
-            <Header />
-            <BodyContainer>
-              <ContextTestView/>
-            </BodyContainer>
-            <StatusBar style="auto" />
-          </View>
+          <PlanningView />
         }
+        <StatusBar style="auto" />
       </SafeAreaProvider>
     </AppContext.Provider>
   );
 
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: Colors.grey,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
