@@ -1,0 +1,11 @@
+{
+  "expo": {
+    "name": "mr-bin",
+    "slug": "mr-bin",
+    "version": "1.0.0",
+    "assetBundlePatterns": [
+      "**/*"
+    ]
+  },
+  "name": "mr-bin"
+}
