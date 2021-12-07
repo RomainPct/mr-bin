@@ -1,19 +1,37 @@
 import { BarCodeScanner } from "expo-barcode-scanner"
-import React, { useState, useEffect } from "react"
+import { BlurView } from "expo-blur"
+import React, { useState, useEffect, useRef } from "react"
 import { View, Text, StyleSheet, Animated, Image, Dimensions, TextInput } from "react-native"
 import { useSafeAreaInsets } from "react-native-safe-area-context"
 import ScanOverlayImage from "../../assets/images/scan/scan-overlay.png"
 import Colors from "../../Style/Colors";
+import ProductView from "./ProductView"
 
 export default function ScanView({style}) {
     
     const [hasPermission, setHasPermission] = useState(null)
     const [currentScanValue, setCurrentScanValue] = useState(null)
+    const productViewAnim = useRef(new Animated.Value(0)).current
     const safeAreaInsets = useSafeAreaInsets()
 
     const barcodeScanned = (scan) => {
-        console.log(scan.data)
+        if (currentScanValue != null) { return }
         setCurrentScanValue(scan.data)
+        Animated.timing(productViewAnim, {
+            toValue: -200 + safeAreaInsets.bottom,
+            duration: 350,
+            useNativeDriver: true
+        }).start()
+    }
+
+    const closeProductView = () => {
+        console.log('close product view')
+        Animated.timing(productViewAnim, {
+            toValue: 0,
+            duration: 200,
+            useNativeDriver: true
+        }).start()
+        setCurrentScanValue(null)
     }
     
     useEffect(() => {
@@ -41,10 +59,11 @@ export default function ScanView({style}) {
                 <View style={styles.scanOverlay}>
                     <Image source={ScanOverlayImage} style={styles.scanOverlayImage} />
                 </View>
-                <View style={{...styles.searchOverlay, paddingBottom: safeAreaInsets.bottom }}>
-                    <TextInput placeholder="Rechercher un produit..." style={styles.searchBar} value={currentScanValue} />
-                </View>
+                <BlurView intensity={80} style={{...styles.searchOverlay, paddingBottom: safeAreaInsets.bottom }}>
+                    <TextInput placeholder="Rechercher un produit..." style={styles.searchBar} />
+                </BlurView>
             </View>
+            <ProductView id={currentScanValue} closeAction={closeProductView} style={{ transform: [{ translateY: productViewAnim }] }} onLayout={data => console.log(data.nativeEvent.layout.height)} />
         </Animated.View>
         )
     }
@@ -82,7 +101,7 @@ export default function ScanView({style}) {
             backgroundColor: Colors.middleGreen,
         },
         searchBar: {
-            height: 38,
+            height: 40,
             backgroundColor: Colors.white,
             paddingHorizontal: 16,
             margin: 24,
