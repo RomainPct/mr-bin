@@ -7,7 +7,7 @@ import Colors from "../../Style/Colors"
 import DayHeaderCell from "../Cells/DayHeaderCell"
 import ScanButton from "../General/ScanButton"
 import ScanView from "./ScanView"
-import { AppContext } from "../../Context/AppContext"
+import { AppContext, ViewMode } from "../../Context/AppContext"
 
 export default function PlanningView() {
 
@@ -77,7 +77,7 @@ export default function PlanningView() {
     }
 
     const navigateTo = (destination) => {
-      if (destination == "home") {
+      if (destination == ViewMode.HOME) {
         closeScan()
       } else {
         openScan()
@@ -96,9 +96,9 @@ export default function PlanningView() {
                     renderSectionHeader={({ section: { title }}) => <DayHeaderCell title={title} />}
                 />
               <Animated.View style={{ transform: [{ translateY: scanButtonAnim }] }}>
-                <ScanButton tapAction={_ => navigateTo("scan")} />
+                <ScanButton tapAction={_ => navigateTo(ViewMode.SCAN)} />
               </Animated.View>
-              <ScanView  style={{ transform: [{ translateY: scanViewAnim }] }} />
+              {ctx.viewMode == 'scan' ? <ScanView  style={{ transform: [{ translateY: scanViewAnim }] }} /> : null}
             </BodyContainer>
         </View>
     )

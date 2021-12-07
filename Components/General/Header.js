@@ -1,7 +1,7 @@
 import React, { useContext } from "react"
 import { StyleSheet, View, Text, Button, TouchableOpacity, Image } from 'react-native'
 import { useSafeAreaInsets } from "react-native-safe-area-context"
-import { AppContext } from "../../Context/AppContext"
+import { AppContext, ViewMode } from "../../Context/AppContext"
 import Colors from "../../Style/Colors"
 import TextTitle from "../Text/TextTitle"
 import CloseDownImage from "../../assets/images/icons/close-down.png"
@@ -24,7 +24,7 @@ export default function Header({ navigateAction }) {
                 <Image source={BellImage} style={styles.buttonImage} />
             </TouchableOpacity>
             :
-            <TouchableOpacity onPress={_ => navigateAction("home")}>
+            <TouchableOpacity onPress={_ => navigateAction(ViewMode.HOME)}>
                 <Image source={CloseDownImage} style={styles.greenButtonImage} />
             </TouchableOpacity>
             }
