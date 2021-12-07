@@ -1,11 +1,14 @@
 import React, { useContext } from "react"
-import { StyleSheet, View, Text } from 'react-native'
+import { StyleSheet, View, Text, Button, TouchableOpacity, Image } from 'react-native'
 import { useSafeAreaInsets } from "react-native-safe-area-context"
 import { AppContext } from "../../Context/AppContext"
 import Colors from "../../Style/Colors"
 import TextTitle from "../Text/TextTitle"
+import CloseDownImage from "../../assets/images/icons/close-down.png"
+import BellImage from "../../assets/images/icons/bell.png"
+import CloseImage from "../../assets/images/icons/close.png"
 
-export default function Header() {
+export default function Header({ navigateAction }) {
 
     const ctx = useContext(AppContext)
     const safeAreaInsets = useSafeAreaInsets()
@@ -16,9 +19,15 @@ export default function Header() {
                 <TextTitle style={styles.logo}>Mr. Bin</TextTitle>
                 <Text style={styles.city}>{ctx.location}</Text>
             </View>
-            <Text>
-                Notifs
-            </Text>
+            {ctx.viewMode == "home" ?
+            <TouchableOpacity>
+                <Image source={BellImage} style={styles.buttonImage} />
+            </TouchableOpacity>
+            :
+            <TouchableOpacity onPress={_ => navigateAction("home")}>
+                <Image source={CloseDownImage} style={styles.greenButtonImage} />
+            </TouchableOpacity>
+            }
         </View>
     )
 }
@@ -42,5 +51,17 @@ const styles = StyleSheet.create({
     },
     city: {
         color: Colors.middleGreen
+    },
+    buttonImage: {
+        width: 40,
+        height: 40,
+        margin: 4,
+    },
+    greenButtonImage: {
+        width: 40,
+        height: 40,
+        margin: 4,
+        backgroundColor: Colors.mainGreen,
+        borderRadius: 20
     }
 })

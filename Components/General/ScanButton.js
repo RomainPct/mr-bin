@@ -7,12 +7,12 @@ import TextBodyDetail from "../Text/TextBodyDetail"
 import TextTitle from "../Text/TextTitle"
 import BarCode from "./../../assets/images/icons/BarCode.png"
 
-export default function ScanButton() {
+export default function ScanButton({ tapAction }) {
 
     const safeAreaInsets = useSafeAreaInsets()
     
     return (
-        <TouchableOpacity onPress={_ => console.log('test')}>
+        <TouchableOpacity onPress={tapAction}>
             <View style={{...styles.scanButton, paddingBottom: 40 + safeAreaInsets.bottom }}>
                 <Image style={styles.icon} source={BarCode} />
                 <View>

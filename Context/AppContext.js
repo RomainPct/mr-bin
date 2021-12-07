@@ -2,6 +2,7 @@ import React from "react"
 
 export const AppContextValue = {
     location: "Vincennes",
+    viewMode: "home",
     updateCurrentLocation: () => {}
   }
 

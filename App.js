@@ -16,7 +16,7 @@ export default function App() {
     'SergioTrendy-Regular': SergioTrendyRegular
   })
   const [appContext, setAppContext] = useState(AppContextValue)
-
+  
   return (
     <AppContext.Provider value={{...appContext, update: setAppContext}}>
       <SafeAreaProvider>
