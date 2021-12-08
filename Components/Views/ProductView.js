@@ -15,11 +15,11 @@ export default function ProductView({style, closeAction, onLayout, id}) {
 
     const DATA = [
         {
-            key: "iihdz",
+            key: 0,
             title: "Bouteille & Flacon lavé"
         },
         {
-            key: "iihdzesca",
+            key: 1,
             title: "Bouchon & Flacon non-lavé"
         }
     ]
@@ -31,7 +31,7 @@ export default function ProductView({style, closeAction, onLayout, id}) {
             </TouchableOpacity>
             <TextTitle>{id}</TextTitle>
             <TextBodyDetail style={styles.brandText}>Eco-Water</TextBodyDetail>
-            {DATA.map(data => <SortingInfoCell data={data} />)}
+            {DATA.map(data => <SortingInfoCell key={data.key} data={data} />)}
             <TouchableOpacity>
                 <View style={styles.knowMoreBubble}>
                     <TextSubtitle>Le saviez-vous ?</TextSubtitle>
