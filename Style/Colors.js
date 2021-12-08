@@ -2,6 +2,7 @@ const Colors = {
     white: "#ffffff",
     mainGreen: "#2F4222",
     middleGreen: "#A4B995",
+    lowGreen: "#E2EEDB",
     grey: "#FCFCFC",
     black: "#000000",
     Bin: {
