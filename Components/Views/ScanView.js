@@ -1,7 +1,7 @@
 import { BarCodeScanner } from "expo-barcode-scanner"
 import { BlurView } from "expo-blur"
 import React, { useState, useEffect, useRef } from "react"
-import { View, Text, StyleSheet, Animated, Image, Dimensions, TextInput } from "react-native"
+import { View, Text, StyleSheet, Animated, Image, Dimensions, TextInput, Button } from "react-native"
 import { useSafeAreaInsets } from "react-native-safe-area-context"
 import ScanOverlayImage from "../../assets/images/scan/scan-overlay.png"
 import Colors from "../../Style/Colors";
@@ -18,27 +18,35 @@ export default function ScanView({style}) {
         if (currentScanValue != null) { return }
         setCurrentScanValue(scan.data)
         Animated.timing(productViewAnim, {
-            toValue: -200 + safeAreaInsets.bottom,
+            toValue: -100,
+            duration: 350,
+            useNativeDriver: true
+        }).start()
+    }
+
+    const adjustProductView = (height) => {
+        if (currentScanValue == null) { return }
+        Animated.timing(productViewAnim, {
+            toValue: -height,
             duration: 350,
             useNativeDriver: true
         }).start()
     }
 
     const closeProductView = () => {
-        console.log('close product view')
+        setCurrentScanValue(null)
         Animated.timing(productViewAnim, {
             toValue: 0,
             duration: 200,
             useNativeDriver: true
         }).start()
-        setCurrentScanValue(null)
     }
     
     useEffect(() => {
         (async () => {
             const { status } = await BarCodeScanner.requestPermissionsAsync();
             setHasPermission(status === 'granted');
-        })();
+        })()
     }, []);
     
     if (hasPermission === null) {
@@ -56,6 +64,7 @@ export default function ScanView({style}) {
                 style={styles.scan}
                 />
             <View style={styles.overlay}>
+                <Button title="test" onPress={_ => barcodeScanned({data: "Juicy Juice"})} />
                 <View style={styles.scanOverlay}>
                     <Image source={ScanOverlayImage} style={styles.scanOverlayImage} />
                 </View>
@@ -63,14 +72,13 @@ export default function ScanView({style}) {
                     <TextInput placeholder="Rechercher un produit..." style={styles.searchBar} />
                 </BlurView>
             </View>
-            <ProductView id={currentScanValue} closeAction={closeProductView} style={{ transform: [{ translateY: productViewAnim }] }} onLayout={data => console.log(data.nativeEvent.layout.height)} />
+            <ProductView id={currentScanValue} closeAction={closeProductView} style={{ transform: [{ translateY: productViewAnim }] }} onLayout={data => adjustProductView(data.nativeEvent.layout.height)} />
         </Animated.View>
         )
     }
     
     const styles = StyleSheet.create({
         container: {
-            flex: 1,
             position: 'absolute',
             top: 0,
             left: 0,
