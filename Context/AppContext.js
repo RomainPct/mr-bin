@@ -6,9 +6,9 @@ export const ViewMode = {
 }
 
 export const AppContextValue = {
-    location: "Vincennes",
+    location: null,
     viewMode: ViewMode.HOME,
-    updateCurrentLocation: () => {}
+    update: null
   }
 
 export const AppContext = React.createContext(AppContextValue)

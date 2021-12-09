@@ -1,20 +1,20 @@
 import React from "react"
-import { Image, StyleSheet, View } from "react-native"
+import { Image, StyleSheet, TouchableOpacity, View } from "react-native"
 import TextBody from "../Text/TextBody"
 import TextBodyDetail from "../Text/TextBodyDetail"
 import PinIcon from "../../assets/images/icons/pin.png"
 import Colors from "../../Style/Colors"
 
-export default function LocationCell() {
+export default function LocationCell({data, onPress}) {
 
     return (
-        <View style={styles.cell}>
+        <TouchableOpacity style={styles.cell} onPress={onPress}>
             <Image source={PinIcon} style={styles.icon} />
             <View>
                 <TextBody>Position actuelle</TextBody>
-                <TextBodyDetail style={styles.subtitle}>27T Rue du Progres, 36160 Montreuil, France</TextBodyDetail>
+                <TextBodyDetail style={styles.subtitle}>{data.name}, {data.postalCode} {data.city}</TextBodyDetail>
             </View>
-        </View>
+        </TouchableOpacity>
     )
 }
 
