@@ -1,4 +1,4 @@
-import React, { useRef, useContext } from "react"
+import React, { useRef, useContext, useEffect, useState } from "react"
 import { Dimensions, SectionList, Button, StyleSheet, Text, View, Animated } from "react-native"
 import BodyContainer from "../Helpers/BodyContainer"
 import BinCell from "../Cells/BinCell"
@@ -8,42 +8,11 @@ import DayHeaderCell from "../Cells/DayHeaderCell"
 import ScanButton from "../General/ScanButton"
 import ScanView from "./ScanView"
 import { AppContext, ViewMode } from "../../Context/AppContext"
+import MrBinAPI from "../../Managers/MrBinAPI"
 
 export default function PlanningView() {
 
-    const DATA = [
-        {
-          title: "Lundi",
-          data: [
-            {
-              name: "Verte",
-              color: Colors.Bin.green
-            }
-          ]
-        },
-        {
-          title: "Mercredi",
-          data: [
-            {
-              name: "Jaune",
-              color: Colors.Bin.yellow
-            },
-            {
-              name: "Bleue",
-              color: Colors.Bin.blue
-            }
-          ]
-        },
-        {
-          title: "Vendredi",
-          data: [
-            {
-              name: "Verte",
-              color: Colors.Bin.green
-            }
-          ]
-        }
-      ]
+    const [planningData, setPlanningData] = useState([])
 
     const scanButtonAnim = useRef(new Animated.Value(0)).current
     const scanViewAnim = useRef(new Animated.Value(Dimensions.get('window').height)).current
@@ -85,12 +54,27 @@ export default function PlanningView() {
       ctx.update({...ctx, viewMode: destination })
     }
 
+    const loadPlanning = _ => {
+      console.log('load ?')
+      if (!ctx.location) { return }
+      MrBinAPI.getPlanning(ctx.location.postalCode)
+          .then(planning => {
+            console.log("did load", planning)
+            setPlanningData(planning)
+          })
+          .catch(err => console.log(err))
+    }
+
+    useEffect(_ => {
+      loadPlanning()
+    }, [ctx.location])
+
     return (
         <View style={styles.container}>
             <Header navigateAction={navigateTo} />
             <BodyContainer>
                 <SectionList
-                    sections={DATA}
+                    sections={planningData}
                     keyExtractor={(item, index) => item + index }
                     renderItem={({item}) => <BinCell item={item} />}
                     renderSectionHeader={({ section: { title }}) => <DayHeaderCell title={title} />}

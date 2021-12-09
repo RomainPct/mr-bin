@@ -14,6 +14,7 @@ const styles = StyleSheet.create({
     header: {
         paddingHorizontal: 16,
         paddingTop: 24,
-        paddingBottom: 8
+        paddingBottom: 8,
+        textTransform: "capitalize"
     }
 })
