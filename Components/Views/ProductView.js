@@ -9,29 +9,18 @@ import MrBinImage from "../../assets/images/mr-bin.png"
 import SortingInfoCell from "../Cells/SortingInfoCell"
 import TextSubtitle from "../Text/TextSubtitle"
 
-export default function ProductView({style, closeAction, onLayout, id}) {
+export default function ProductView({style, closeAction, onLayout, productData}) {
 
     const safeAreaInsets = useSafeAreaInsets()
-
-    const DATA = [
-        {
-            key: 0,
-            title: "Bouteille & Flacon lavé"
-        },
-        {
-            key: 1,
-            title: "Bouchon & Flacon non-lavé"
-        }
-    ]
 
     return (
         <Animated.View style={{...styles.container, ...style, paddingBottom: 20 + safeAreaInsets.bottom}} onLayout={onLayout}>
             <TouchableOpacity onPress={closeAction} style={styles.closeButton}>
                 <Image source={CloseImage} style={styles.closeButtonIcon} />
             </TouchableOpacity>
-            <TextTitle>{id}</TextTitle>
-            <TextBodyDetail style={styles.brandText}>Eco-Water</TextBodyDetail>
-            {DATA.map(data => <SortingInfoCell key={data.key} data={data} />)}
+            <TextTitle>{productData.status == "loaded" ? productData.data.label : "Chargement..."}</TextTitle>
+            <TextBodyDetail style={styles.brandText}>{productData.data.marque ?? ""}</TextBodyDetail>
+            {(productData.data.poubelles ?? []).map(data => <SortingInfoCell key={data.couleur.class} data={data} />)}
             <TouchableOpacity>
                 <View style={styles.knowMoreBubble}>
                     <TextSubtitle>Le saviez-vous ?</TextSubtitle>

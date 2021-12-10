@@ -1,22 +1,38 @@
 import { BarCodeScanner } from "expo-barcode-scanner"
 import { BlurView } from "expo-blur"
-import React, { useState, useEffect, useRef } from "react"
+import React, { useState, useEffect, useRef, useContext } from "react"
 import { View, Text, StyleSheet, Animated, Image, Dimensions, TextInput, Button } from "react-native"
 import { useSafeAreaInsets } from "react-native-safe-area-context"
 import ScanOverlayImage from "../../assets/images/scan/scan-overlay.png"
+import { AppContext } from "../../Context/AppContext"
+import MrBinAPI from "../../Managers/MrBinAPI"
 import Colors from "../../Style/Colors";
 import ProductView from "./ProductView"
 
 export default function ScanView({style}) {
     
     const [hasPermission, setHasPermission] = useState(null)
-    const [currentScanValue, setCurrentScanValue] = useState(null)
+    const [currentScanValue, setCurrentScanValue] = useState({ status: "empty", data: {} })
     const productViewAnim = useRef(new Animated.Value(0)).current
     const safeAreaInsets = useSafeAreaInsets()
+    const ctx = useContext(AppContext)
 
     const barcodeScanned = (scan) => {
-        if (currentScanValue != null) { return }
-        setCurrentScanValue(scan.data)
+        if (currentScanValue.status != "empty") { return }
+        setCurrentScanValue({
+            status: "loading",
+            id: scan.data,
+            data: {}
+        })
+        MrBinAPI.getProductInfo(scan.data, ctx.location.postalCode)
+            .then(result => {
+                setCurrentScanValue({
+                    status: "loaded",
+                    id: scan.data,
+                    data: result[0][0]
+                })
+            })
+            .catch(e => console.log(e))
         Animated.timing(productViewAnim, {
             toValue: -100,
             duration: 350,
@@ -25,7 +41,7 @@ export default function ScanView({style}) {
     }
 
     const adjustProductView = (height) => {
-        if (currentScanValue == null) { return }
+        if (currentScanValue.status == "empty") { return }
         Animated.timing(productViewAnim, {
             toValue: -height,
             duration: 350,
@@ -34,7 +50,7 @@ export default function ScanView({style}) {
     }
 
     const closeProductView = () => {
-        setCurrentScanValue(null)
+        setCurrentScanValue({ status: "empty", data: {} })
         Animated.timing(productViewAnim, {
             toValue: 0,
             duration: 200,
@@ -64,7 +80,7 @@ export default function ScanView({style}) {
                 style={styles.scan}
                 />
             <View style={styles.overlay}>
-                <Button title="test" onPress={_ => barcodeScanned({data: "Juicy Juice"})} />
+                <Button title="test" onPress={_ => barcodeScanned({data: "3017620425035"})} />
                 <View style={styles.scanOverlay}>
                     <Image source={ScanOverlayImage} style={styles.scanOverlayImage} />
                 </View>
@@ -72,7 +88,7 @@ export default function ScanView({style}) {
                     <TextInput placeholder="Rechercher un produit..." style={styles.searchBar} />
                 </BlurView>
             </View>
-            <ProductView id={currentScanValue} closeAction={closeProductView} style={{ transform: [{ translateY: productViewAnim }] }} onLayout={data => adjustProductView(data.nativeEvent.layout.height)} />
+            <ProductView productData={currentScanValue} closeAction={closeProductView} style={{ transform: [{ translateY: productViewAnim }] }} onLayout={data => adjustProductView(data.nativeEvent.layout.height)} />
         </Animated.View>
         )
     }

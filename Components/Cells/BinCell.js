@@ -6,21 +6,11 @@ import Colors from './../../Style/Colors'
 
 export default function BinCell({item}) {
 
-    const translateColor = ({ poubelles : {couleur} }) => {
-        switch (couleur.class) {
-            case 'yellow': return Colors.Bin.yellow
-            case 'blue': return Colors.Bin.blue
-            case 'green': return Colors.Bin.green
-            case 'red': return Colors.Bin.red
-            default: return Colors.mainGreen
-        }
-    }
-
     return (
         <View style={styles.shadowBox}>
             <View style={styles.cell}>
                 <View style={styles.headRow}>
-                    <View style={{...styles.timingBlock, backgroundColor: translateColor(item)}}>
+                    <View style={{...styles.timingBlock, backgroundColor: Colors.translateColor(item.poubelles.couleur)}}>
                         <TextBodyDetail style={styles.whiteText}>À partir de</TextBodyDetail>
                         <TextBody style={styles.whiteText}>{item.passageDate.getHours()}h{`0${item.passageDate.getMinutes()}`.slice(-2)}</TextBody>
                     </View>

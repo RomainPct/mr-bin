@@ -38,7 +38,6 @@ export default function LocationSwitcher({ style, closeAction }) {
         ctx.update({ ...ctx, location: location});
         (async () => {
             await AsyncStorage.setItem('@location', JSON.stringify(location))
-            console.log("saved")
         })()
         closeAction()
     }

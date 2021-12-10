@@ -9,6 +9,12 @@ export default class MrBinAPI {
           someDate.getFullYear() == today.getFullYear()
       }
 
+    static getProductInfo(productId, postalCode) {
+        // https://mrbin.julienwagentrutz.com/produits/93100/3017620425035
+        return fetch(`${MrBinAPI.url}/produits/${postalCode}/${productId}`)
+                .then(resp => resp.json())
+    }
+
     static getPlanning(postalCode) {
         return fetch(`${MrBinAPI.url}/horaires/${postalCode}`)
             .then(resp => resp.json())

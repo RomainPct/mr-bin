@@ -10,6 +10,15 @@ const Colors = {
         green: "#93D076",
         blue: "#71AAFF",
         red: "#EB6161",
+    },
+    translateColor: (color) => {
+        switch (color.class) {
+            case 'yellow': return Colors.Bin.yellow
+            case 'blue': return Colors.Bin.blue
+            case 'green': return Colors.Bin.green
+            case 'red': return Colors.Bin.red
+            default: return Colors.mainGreen
+        }
     }
 }
 
