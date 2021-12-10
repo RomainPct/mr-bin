@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react"
+import React, { useContext, useEffect, useRef, useState } from "react"
 import { StyleSheet, TextInput, View } from "react-native"
 import Colors from "../../Style/Colors"
 import LocationCell from "../Cells/LocationCell"
@@ -13,6 +13,7 @@ export default function LocationSwitcher({ style, closeAction }) {
     const [searchQuery, setSearchQuery] = useState(null)
     const [location, setLocation] = useState({ name: "Géolocalisation en cours..."});
     const [searchResults, setSearchResults] = useState([])
+    const lastSearchChange = useRef(null)
     
     useEffect(() => {
         (async () => {
@@ -45,16 +46,21 @@ export default function LocationSwitcher({ style, closeAction }) {
         closeAction()
     }
 
-    const searchDidChange = searchQuery => {
-        console.log("search has changed : ", searchQuery)
-        MrBinAPI.searchForAnAddress(searchQuery)
+    const searchDidChange = newValue => {
+        const now = Date.now()
+        lastSearchChange.current = now
+        setSearchQuery(newValue)
+        setTimeout(() => {
+            if (now != lastSearchChange.current) { return }
+            MrBinAPI.searchForAnAddress(newValue)
                 .then(results => setSearchResults(results))
                 .catch(e => console.log(e))
+        }, 400);
     }
     
     return (
         <View style={{ ...styles.container, ...style}}>
-            <TextInput placeholder="Trouver un lieu..." style={styles.searchBar} onChangeText={searchDidChange} />
+            <TextInput placeholder="Trouver un lieu..." style={styles.searchBar} value={searchQuery} onChangeText={searchDidChange} />
             {searchResults.map(result =>
                 <LocationCell key={result.id} data={result} onPress={_ => selectLocation(result)} />
             )}

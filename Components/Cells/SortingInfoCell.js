@@ -7,8 +7,6 @@ import RecyclableBinImage from "../../assets/images/icons/recyclable-bin.png"
 
 export default function SortingInfoCell({data}) {
 
-    console.log(data)
-
     const getTitle = _ => data.dechets.map(d => d.label).join(', ')
 
     const color = Colors.translateColor(data.couleur)

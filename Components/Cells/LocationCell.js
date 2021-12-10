@@ -7,8 +7,6 @@ import Colors from "../../Style/Colors"
 
 export default function LocationCell({data, onPress}) {
 
-    console.log(data)
-
     return (
         <TouchableOpacity style={styles.cell} onPress={onPress}>
             <Image source={PinIcon} style={styles.icon} />

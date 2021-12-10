@@ -18,9 +18,7 @@ export default class MrBinAPI {
                     if (!json.features) { return [] }
                     return json.features.map(value => {
                         const context = value.properties.context.split(',')
-                        console.log(context)
                         context.shift()
-                        console.log(context)
                         return {
                             id: value.properties.id,
                             title: `${value.properties.name}, ${value.properties.city}`,
