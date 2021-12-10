@@ -88,7 +88,7 @@ export default function ScanView({style}) {
                     <TextInput placeholder="Rechercher un produit..." style={styles.searchBar} />
                 </BlurView>
             </View>
-            <ProductView productData={currentScanValue} closeAction={closeProductView} style={{ transform: [{ translateY: productViewAnim }] }} onLayout={data => adjustProductView(data.nativeEvent.layout.height)} />
+            <ProductView product={currentScanValue} closeAction={closeProductView} style={{ transform: [{ translateY: productViewAnim }] }} onLayout={height => adjustProductView(height)} />
         </Animated.View>
         )
     }

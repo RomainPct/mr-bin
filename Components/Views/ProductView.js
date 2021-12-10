@@ -1,5 +1,5 @@
-import React from "react"
-import { Animated, StyleSheet, Image, TouchableOpacity, View } from "react-native"
+import React, { useRef, useState } from "react"
+import { Animated, StyleSheet, Image, TouchableOpacity, View, Easing } from "react-native"
 import { useSafeAreaInsets } from "react-native-safe-area-context"
 import Colors from "../../Style/Colors"
 import TextTitle from "../Text/TextTitle"
@@ -9,27 +9,87 @@ import MrBinImage from "../../assets/images/mr-bin.png"
 import SortingInfoCell from "../Cells/SortingInfoCell"
 import TextSubtitle from "../Text/TextSubtitle"
 
-export default function ProductView({style, closeAction, onLayout, productData}) {
+export default function ProductView({style, closeAction, onLayout, product}) {
 
     const safeAreaInsets = useSafeAreaInsets()
+    const mrBinAnim = useRef(new Animated.Value(0)).current
+    const [knowMoreShown, setKnowMoreShown] = useState(false)
+    const height = useRef(0)
+
+    const openKnowMore = _ => {
+        const isOpening = !knowMoreShown
+        setKnowMoreShown(isOpening)
+        Animated.timing(mrBinAnim, {
+            toValue: isOpening ? 1 : 0,
+            duration: 400,
+            easing: Easing.ease,
+            useNativeDriver: true
+        }).start()
+        localOnLayout(isOpening ? height.current - 120 : height.current)
+    }
+
+    const localOnLayout = data => {
+        if (isNaN(data)) {
+            height.current = data.nativeEvent.layout.height
+            onLayout(data.nativeEvent.layout.height)
+        } else {
+            onLayout(data)
+        }
+    }
+
+    const localCloseAction = _ => {
+        setKnowMoreShown(false)
+        mrBinAnim.setValue(0)
+        closeAction()
+    }
 
     return (
-        <Animated.View style={{...styles.container, ...style, paddingBottom: 20 + safeAreaInsets.bottom}} onLayout={onLayout}>
-            <TouchableOpacity onPress={closeAction} style={styles.closeButton}>
+        <Animated.View style={{...styles.container, ...style, paddingBottom: 20 + safeAreaInsets.bottom}} onLayout={localOnLayout}>
+            <TouchableOpacity onPress={localCloseAction} style={styles.closeButton}>
                 <Image source={CloseImage} style={styles.closeButtonIcon} />
             </TouchableOpacity>
-            <TextTitle>{productData.status == "loaded" ? productData.data.label : "Chargement..."}</TextTitle>
-            <TextBodyDetail style={styles.brandText}>{productData.data.marque ?? ""}</TextBodyDetail>
-            {(productData.data.poubelles ?? []).map(data =>
+            <TextTitle>{product.status == "loaded" ? product.data.label : "Chargement..."}</TextTitle>
+            <TextBodyDetail style={styles.brandText}>{product.data.marque ?? ""}</TextBodyDetail>
+            {(product.data.poubelles ?? []).map(data =>
                 <SortingInfoCell key={data.couleur.class} data={data} />
             )}
-            <TouchableOpacity>
-                <View style={styles.knowMoreBubble}>
-                    <TextSubtitle>Le saviez-vous ?</TextSubtitle>
-                    <TextBodyDetail>Cliquez-ici pour une anecdote</TextBodyDetail>
-                </View>
-            </TouchableOpacity>
-            <Image source={MrBinImage} style={styles.mrBinImage} />
+            <Animated.View style={{transform: [
+                        {translateY: mrBinAnim.interpolate({
+                            inputRange: [0, 1],
+                            outputRange: [0, -height.current]
+                        })}
+                    ]}}>
+                <TouchableOpacity onPress={openKnowMore}>
+                    <View style={styles.knowMoreBubble}>
+                        <TextSubtitle>Le saviez-vous ?</TextSubtitle>
+                        <TextBodyDetail>{knowMoreShown ? product.data.SaviezVous : "Cliquez-ici pour une anecdote"}</TextBodyDetail>
+                    </View>
+                </TouchableOpacity>
+            </Animated.View>
+            <Animated.Image
+                source={MrBinImage}
+                style={{
+                    ...styles.mrBinImage,
+                    transform: [
+                        {scale: mrBinAnim.interpolate({
+                            inputRange: [0, 1],
+                            outputRange: [1.8, 1]
+                        })},
+                        {rotate: mrBinAnim.interpolate({
+                            inputRange: [0, 1],
+                            outputRange: ["-30deg", "0deg"]
+                        })},
+                        {translateY: mrBinAnim.interpolate({
+                            inputRange: [0, 1],
+                            outputRange: [25, -height.current]
+                        })},
+                        {translateX: mrBinAnim.interpolate({
+                            inputRange: [0, 1],
+                            outputRange: [0, -25]
+                        })}
+                    ]
+                }}
+                />
         </Animated.View>
     )
 
@@ -78,11 +138,6 @@ const styles = StyleSheet.create({
         width: 100,
         bottom: 0,
         right: 0,
-        position: "absolute",
-        transform: [
-            {scale: 1.8},
-            {rotate: "-30deg"},
-            {translateY: 25}
-        ]
+        position: "absolute"
     }
 })
