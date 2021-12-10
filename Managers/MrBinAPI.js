@@ -7,10 +7,33 @@ export default class MrBinAPI {
         return someDate.getDate() == today.getDate() &&
           someDate.getMonth() == today.getMonth() &&
           someDate.getFullYear() == today.getFullYear()
-      }
+    }
+
+    static searchForAnAddress(query) {
+        // "https://api-adresse.data.gouv.fr/search/?q=8+bd+du+port&limit=15"
+        console.log('query')
+        return fetch(`https://api-adresse.data.gouv.fr/search/?q=${encodeURIComponent(query)}&limit=3`)
+                .then(resp => resp.json())
+                .then(json => {
+                    if (!json.features) { return [] }
+                    return json.features.map(value => {
+                        const context = value.properties.context.split(',')
+                        console.log(context)
+                        context.shift()
+                        console.log(context)
+                        return {
+                            id: value.properties.id,
+                            title: `${value.properties.name}, ${value.properties.city}`,
+                            label: `${value.properties.postcode},${context.join(',')}`,
+                            name: value.properties.name ?? "",
+                            postalCode: value.properties.postcode ?? "",
+                            city: value.properties.city ?? ""
+                        }
+                    })
+                })
+    }
 
     static getProductInfo(productId, postalCode) {
-        // https://mrbin.julienwagentrutz.com/produits/93100/3017620425035
         return fetch(`${MrBinAPI.url}/produits/${postalCode}/${productId}`)
                 .then(resp => resp.json())
     }

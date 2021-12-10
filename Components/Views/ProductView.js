@@ -20,7 +20,9 @@ export default function ProductView({style, closeAction, onLayout, productData})
             </TouchableOpacity>
             <TextTitle>{productData.status == "loaded" ? productData.data.label : "Chargement..."}</TextTitle>
             <TextBodyDetail style={styles.brandText}>{productData.data.marque ?? ""}</TextBodyDetail>
-            {(productData.data.poubelles ?? []).map(data => <SortingInfoCell key={data.couleur.class} data={data} />)}
+            {(productData.data.poubelles ?? []).map(data =>
+                <SortingInfoCell key={data.couleur.class} data={data} />
+            )}
             <TouchableOpacity>
                 <View style={styles.knowMoreBubble}>
                     <TextSubtitle>Le saviez-vous ?</TextSubtitle>

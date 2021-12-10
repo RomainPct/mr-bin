@@ -5,11 +5,14 @@ import LocationCell from "../Cells/LocationCell"
 import * as Location from 'expo-location'
 import { AppContext } from "../../Context/AppContext"
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import MrBinAPI from "../../Managers/MrBinAPI"
 
 export default function LocationSwitcher({ style, closeAction }) {
 
     const ctx = useContext(AppContext)
+    const [searchQuery, setSearchQuery] = useState(null)
     const [location, setLocation] = useState({ name: "Géolocalisation en cours..."});
+    const [searchResults, setSearchResults] = useState([])
     
     useEffect(() => {
         (async () => {
@@ -41,12 +44,23 @@ export default function LocationSwitcher({ style, closeAction }) {
         })()
         closeAction()
     }
+
+    const searchDidChange = searchQuery => {
+        console.log("search has changed : ", searchQuery)
+        MrBinAPI.searchForAnAddress(searchQuery)
+                .then(results => setSearchResults(results))
+                .catch(e => console.log(e))
+    }
     
     return (
         <View style={{ ...styles.container, ...style}}>
-        <TextInput placeholder="Trouver un lieu..." style={styles.searchBar} />
-        <View style={{ height: 1, width: '100%', backgroundColor: Colors.mainGreen, marginVertical: 20 }} />
-        {location != null ? <LocationCell data={location} onPress={_ => selectLocation(location)} /> : null}
+            <TextInput placeholder="Trouver un lieu..." style={styles.searchBar} onChangeText={searchDidChange} />
+            {searchResults.map(result =>
+                <LocationCell key={result.id} data={result} onPress={_ => selectLocation(result)} />
+            )}
+            <View style={{ height: 1, width: '100%', backgroundColor: Colors.mainGreen, marginTop: 20 }} />
+            {location != null ? <LocationCell data={location} onPress={_ => selectLocation(location)} /> : null}
+            {ctx.location != null && ctx.location.name != location.name ? <LocationCell data={{...ctx.location, title: "Position sélectionnée" }} /> : null}
         </View>
         )
     }
@@ -54,7 +68,9 @@ export default function LocationSwitcher({ style, closeAction }) {
     const styles = StyleSheet.create({
         container: {
             backgroundColor: Colors.white,
-            padding: 24,
+            paddingHorizontal: 24,
+            paddingTop: 24,
+            paddingBottom: 12,
             borderBottomEndRadius: 20,
             borderBottomStartRadius: 20,
             shadowColor: Colors.black,

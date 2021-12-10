@@ -7,12 +7,14 @@ import Colors from "../../Style/Colors"
 
 export default function LocationCell({data, onPress}) {
 
+    console.log(data)
+
     return (
         <TouchableOpacity style={styles.cell} onPress={onPress}>
             <Image source={PinIcon} style={styles.icon} />
             <View>
-                <TextBody>Position actuelle</TextBody>
-                <TextBodyDetail style={styles.subtitle}>{data.name}, {data.postalCode} {data.city}</TextBodyDetail>
+                <TextBody>{data.title ?? "Position actuelle"}</TextBody>
+                <TextBodyDetail style={styles.subtitle}>{data.label ?? `${data.name}, ${data.postalCode} ${data.city}`}</TextBodyDetail>
             </View>
         </TouchableOpacity>
     )
@@ -21,7 +23,9 @@ export default function LocationCell({data, onPress}) {
 const styles = StyleSheet.create({
     cell: {
         flexDirection: "row",
-        alignItems: "center"
+        alignItems: "center",
+        paddingVertical: 12,
+        marginTop: 12
     },
     icon: {
         width: 24,
