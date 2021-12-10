@@ -9,7 +9,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 export default function LocationSwitcher({ style, closeAction }) {
 
     const ctx = useContext(AppContext)
-    const [location, setLocation] = useState(null);
+    const [location, setLocation] = useState({ name: "Géolocalisation en cours..."});
     
     useEffect(() => {
         (async () => {

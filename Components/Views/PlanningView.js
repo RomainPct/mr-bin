@@ -55,7 +55,6 @@ export default function PlanningView() {
     }
 
     const loadPlanning = _ => {
-      console.log('load ?')
       if (!ctx.location) { return }
       MrBinAPI.getPlanning(ctx.location.postalCode)
           .then(planning => {
