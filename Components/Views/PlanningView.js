@@ -9,6 +9,7 @@ import ScanButton from "../General/ScanButton"
 import ScanView from "./ScanView"
 import { AppContext, ViewMode } from "../../Context/AppContext"
 import MrBinAPI from "../../Managers/MrBinAPI"
+import NotificationSettingsView from "./NotificationSettingsView"
 
 export default function PlanningView() {
 
@@ -49,7 +50,7 @@ export default function PlanningView() {
       Keyboard.dismiss()
       if (destination == ViewMode.HOME) {
         closeScan()
-      } else {
+      } else if (destination == ViewMode.SCAN) {
         openScan()
       }
       ctx.update({...ctx, viewMode: destination })
@@ -70,6 +71,7 @@ export default function PlanningView() {
         <View style={styles.container}>
             <Header navigateAction={navigateTo} />
             <BodyContainer>
+                {ctx.viewMode == ViewMode.NOTIFICATIONS ? <NotificationSettingsView /> : null}
                 <SectionList
                     sections={planningData}
                     keyExtractor={(item, index) => item + index }

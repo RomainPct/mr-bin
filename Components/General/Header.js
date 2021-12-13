@@ -40,13 +40,16 @@ export default function Header({ navigateAction }) {
                     <Image source={ArrowIcon} style={styles.locationIcon} />
                 </TouchableOpacity>
             </View>
-            {ctx.viewMode == "home" ?
-            <TouchableOpacity>
+            {ctx.viewMode == ViewMode.HOME ?
+            <TouchableOpacity onPress={_ => navigateAction(ViewMode.NOTIFICATIONS)}>
                 <Image source={BellIcon} style={styles.buttonImage} />
             </TouchableOpacity>
             :
             <TouchableOpacity onPress={_ => navigateAction(ViewMode.HOME)}>
-                <Image source={CloseDownIcon} style={styles.greenButtonImage} />
+                {ctx.viewMode == ViewMode.NOTIFICATIONS ?
+                <Image source={CloseIcon} style={styles.greenButtonImage} />
+                :
+                <Image source={CloseDownIcon} style={styles.greenButtonImage} />}
             </TouchableOpacity>
             }
             {showLocationSwitcher ? <LocationSwitcher style={{...styles.locationSwitcher}} closeAction={_ => setShowLocationSwitcher(false)} /> : null}
