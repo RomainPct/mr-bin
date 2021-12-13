@@ -10,8 +10,6 @@ export default class MrBinAPI {
     }
 
     static searchForAnAddress(query) {
-        // "https://api-adresse.data.gouv.fr/search/?q=8+bd+du+port&limit=15"
-        console.log('query')
         return fetch(`https://api-adresse.data.gouv.fr/search/?q=${encodeURIComponent(query)}&limit=3`)
                 .then(resp => resp.json())
                 .then(json => {
@@ -29,6 +27,11 @@ export default class MrBinAPI {
                         }
                     })
                 })
+    }
+
+    static search(query) {
+        return fetch(`${MrBinAPI.url}/produits/recherche/${query}`)
+                .then(resp => resp.json())
     }
 
     static getProductInfo(productId, postalCode) {

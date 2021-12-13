@@ -1,5 +1,5 @@
 import React, { useRef, useContext, useEffect, useState } from "react"
-import { Dimensions, SectionList, Button, StyleSheet, Text, View, Animated } from "react-native"
+import { Dimensions, SectionList, Button, StyleSheet, Text, View, Animated, Keyboard } from "react-native"
 import BodyContainer from "../Helpers/BodyContainer"
 import BinCell from "../Cells/BinCell"
 import Header from "../General/Header"
@@ -46,6 +46,7 @@ export default function PlanningView() {
     }
 
     const navigateTo = (destination) => {
+      Keyboard.dismiss()
       if (destination == ViewMode.HOME) {
         closeScan()
       } else {
