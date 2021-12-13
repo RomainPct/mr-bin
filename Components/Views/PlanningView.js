@@ -14,6 +14,7 @@ import NotificationSettingsView from "./NotificationSettingsView"
 export default function PlanningView() {
 
     const [planningData, setPlanningData] = useState([])
+    const [focusedBin, setFocusedBin] = useState(null)
 
     const scanButtonAnim = useRef(new Animated.Value(0)).current
     const scanViewAnim = useRef(new Animated.Value(Dimensions.get('window').height)).current
@@ -67,6 +68,14 @@ export default function PlanningView() {
       loadPlanning()
     }, [ctx.location])
 
+    const selectBin = (key) => {
+      if (focusedBin == key) {
+        setFocusedBin(null)
+      } else {
+        setFocusedBin(key)
+      }
+    }
+
     return (
         <View style={styles.container}>
             <Header navigateAction={navigateTo} />
@@ -74,8 +83,8 @@ export default function PlanningView() {
                 {ctx.viewMode == ViewMode.NOTIFICATIONS ? <NotificationSettingsView /> : null}
                 <SectionList
                     sections={planningData}
-                    keyExtractor={(item, index) => item + index }
-                    renderItem={({item}) => <BinCell item={item} />}
+                    keyExtractor={(item) => item.id }
+                    renderItem={({item}) => <BinCell onPress={_ => selectBin(item.id)} item={item} isOpen={item.id == focusedBin} />}
                     renderSectionHeader={({ section: { title }}) => <DayHeaderCell title={title} />}
                 />
               <Animated.View style={{ transform: [{ translateY: scanButtonAnim }] }}>
