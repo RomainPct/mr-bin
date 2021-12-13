@@ -10,6 +10,7 @@ import ScanView from "./ScanView"
 import { AppContext, ViewMode } from "../../Context/AppContext"
 import MrBinAPI from "../../Managers/MrBinAPI"
 import NotificationSettingsView from "./NotificationSettingsView"
+import EmptyPlanning from "../General/EmptyPlanning"
 
 export default function PlanningView() {
 
@@ -81,12 +82,14 @@ export default function PlanningView() {
             <Header navigateAction={navigateTo} />
             <BodyContainer>
                 {ctx.viewMode == ViewMode.NOTIFICATIONS ? <NotificationSettingsView /> : null}
-                <SectionList
+                {planningData.length > 0 ?
+                  <SectionList
                     sections={planningData}
                     keyExtractor={(item) => item.id }
                     renderItem={({item}) => <BinCell onPress={_ => selectBin(item.id)} item={item} isOpen={item.id == focusedBin} />}
                     renderSectionHeader={({ section: { title }}) => <DayHeaderCell title={title} />}
                 />
+                : <EmptyPlanning /> }
               <Animated.View style={{ transform: [{ translateY: scanButtonAnim }] }}>
                 <ScanButton tapAction={_ => navigateTo(ViewMode.SCAN)} />
               </Animated.View>

@@ -6,8 +6,6 @@ import TextSubtitle from "../Text/TextSubtitle"
 
 export default function SearchResultCell({ item, onPress }) {
 
-    console.log(item)
-
     return (
         <TouchableOpacity style={styles.container} onPress={onPress}>
             <TextBodyDetail style={styles.subtitle}>{item.marque}</TextBodyDetail>
@@ -22,7 +20,8 @@ const styles = StyleSheet.create({
         backgroundColor: Colors.white,
         borderRadius: 16,
         marginHorizontal: 24,
-        padding: 16
+        padding: 16,
+        marginBottom: 16
     },
     subtitle: {
         color: Colors.middleGreen,

@@ -31,11 +31,10 @@ export default function ScanView({style}) {
         })
         MrBinAPI.getProductInfo(scan.data, ctx.location.postalCode)
             .then(result => {
-                console.log("result : ", result)
                 setCurrentScanValue({
                     status: "loaded",
                     id: scan.data,
-                    data: result[0][0]
+                    data: result[0]
                 })
             })
             .catch(e => {

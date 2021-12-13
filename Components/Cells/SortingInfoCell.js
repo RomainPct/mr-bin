@@ -20,7 +20,7 @@ export default function SortingInfoCell({data}) {
                 <View style={styles.row}>
                     <TextBodyDetail style={{color: color}}>Poubelle {data.couleur.label}</TextBodyDetail>
                     <TextBodyDetail style={styles.separator}>-</TextBodyDetail>
-                    <TextBodyDetail>Déchets 🚩</TextBodyDetail>
+                    <TextBodyDetail>{data.recyclable}</TextBodyDetail>
                 </View>
                 <TextBody>{getTitle()}</TextBody>
             </View>

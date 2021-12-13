@@ -43,6 +43,8 @@ export default function ProductView({style, closeAction, onLayout, product}) {
         closeAction()
     }
 
+    console.log(product.data)
+
     return (
         <Animated.View style={{...styles.container, ...style, paddingBottom: 20 + safeAreaInsets.bottom}} onLayout={localOnLayout}>
             <TouchableOpacity onPress={localCloseAction} style={styles.closeButton}>
