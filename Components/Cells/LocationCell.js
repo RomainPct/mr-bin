@@ -12,7 +12,7 @@ export default function LocationCell({data, onPress}) {
             <Image source={PinIcon} style={styles.icon} />
             <View>
                 <TextBody>{data.title ?? "Position actuelle"}</TextBody>
-                <TextBodyDetail style={styles.subtitle}>{data.label ?? `${data.name}, ${data.postalCode} ${data.city}`}</TextBodyDetail>
+                <TextBodyDetail style={styles.subtitle}>{data.label ?? `${data.name}, ${data.postalCode ?? ""} ${data.city ?? ""}`}</TextBodyDetail>
             </View>
         </TouchableOpacity>
     )

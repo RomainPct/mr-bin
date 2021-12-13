@@ -81,7 +81,7 @@ export default function PlanningView() {
               <Animated.View style={{ transform: [{ translateY: scanButtonAnim }] }}>
                 <ScanButton tapAction={_ => navigateTo(ViewMode.SCAN)} />
               </Animated.View>
-              <ScanView  style={{ transform: [{ translateY: scanViewAnim }] }} />
+              <ScanView style={{ transform: [{ translateY: scanViewAnim }] }} />
             </BodyContainer>
         </View>
     )

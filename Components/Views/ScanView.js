@@ -31,13 +31,17 @@ export default function ScanView({style}) {
         })
         MrBinAPI.getProductInfo(scan.data, ctx.location.postalCode)
             .then(result => {
+                console.log("result : ", result)
                 setCurrentScanValue({
                     status: "loaded",
                     id: scan.data,
                     data: result[0][0]
                 })
             })
-            .catch(e => console.log(e))
+            .catch(e => {
+                setCurrentScanValue({ status: "loaded", id: scan.data, data: { label: "Produit inconnu" } })
+                console.log("Error while getting product info : ",e)
+            })
         Animated.timing(productViewAnim, {
             toValue: -100,
             duration: 350,
@@ -73,6 +77,12 @@ export default function ScanView({style}) {
         closeProductView()
         setIsSearching(true)
     }
+
+    useEffect(_ => {
+        closeProductView()
+        setIsSearching(false)
+        setQuery("")
+    }, [ctx.viewMode])
     
     useEffect(() => {
         (async () => {
