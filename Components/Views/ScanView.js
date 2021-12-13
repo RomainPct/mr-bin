@@ -23,6 +23,7 @@ export default function ScanView({style}) {
 
     const barcodeScanned = (scan) => {
         if (currentScanValue.status != "empty") { return }
+        if (!ctx.location) { return }
         searchInputRef.current.blur()
         setCurrentScanValue({
             status: "loading",
