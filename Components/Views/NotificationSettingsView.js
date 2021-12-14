@@ -1,4 +1,4 @@
-import React, { useEffect } from "react"
+import React, { useEffect, useState } from "react"
 import Constants from 'expo-constants'
 import { StyleSheet, View } from "react-native"
 import Colors from "../../Style/Colors"
@@ -6,14 +6,35 @@ import NotificationCell from "../Cells/NotificationCell"
 import TextBody from "../Text/TextBody"
 import TextTitle from "../Text/TextTitle"
 import * as Notifications from 'expo-notifications';
+import MrBinAPI from "../../Managers/MrBinAPI"
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function NotificationSettingsView() {
 
+    const [pushToken, setPushToken] = useState(null)
+    const [notifications, setNotifications] = useState([])
+
     useEffect(() => {
-        registerForPushNotificationsAsync().then(token => {
-            console.log("send this token (",token,") to the server with the notification settings")
-        })
+      registerForPushNotificationsAsync().then(token => { setPushToken(token) });
+      (async () => {
+          const jsonValue = await AsyncStorage.getItem('@notifications')
+          const result = jsonValue != null ? JSON.parse(jsonValue) : [];
+          setNotifications(result)
+      })()
     }, []);
+
+    useEffect(_ => {
+      if (pushToken == null) return
+      MrBinAPI.sendNotificationSettings({
+        token: pushToken,
+        notifications: notifications
+      })
+        .then(result => console.log("Success : ", result))
+        .catch(e => console.log("Error : ", e));
+      (async () => {
+          await AsyncStorage.setItem('@notifications', JSON.stringify(notifications))
+      })()
+    }, [pushToken, notifications])
 
     async function registerForPushNotificationsAsync() {
         let token;
@@ -44,6 +65,15 @@ export default function NotificationSettingsView() {
         return token;
       }
 
+    const toggleNotification = (_enabled, _id) => {
+      if (_enabled) {
+        setNotifications([...notifications, _id])
+      } else {
+        notifs = notifications.filter(value => value != _id)
+        setNotifications(notifs)
+      }
+    }
+
     return (
         <View style={styles.container}>
             <View style={styles.info}>
@@ -51,12 +81,12 @@ export default function NotificationSettingsView() {
                 <TextBody>Soyez prévenu avant chaque ramassage des poubelles afin de ne plus jamais oublier.</TextBody>
             </View>
             <View style={styles.row}>
-                <NotificationCell color={{ class: "yellow" }} />
-                <NotificationCell color={{ class: "green" }} />
+                <NotificationCell onToggle={toggleNotification} enabled={notifications.includes("yellow")} available={pushToken != null} color={{ class: "yellow" }} />
+                <NotificationCell onToggle={toggleNotification} enabled={notifications.includes("green")} available={pushToken != null} color={{ class: "green" }} />
             </View>
             <View style={styles.row}>
-                <NotificationCell color={{ class: "blue" }} />
-                <NotificationCell color={{ class: "red" }} />
+                <NotificationCell onToggle={toggleNotification} enabled={notifications.includes("blue")} available={pushToken != null} color={{ class: "blue" }} />
+                <NotificationCell onToggle={toggleNotification} enabled={notifications.includes("red")} available={pushToken != null} color={{ class: "red" }} />
             </View>
         </View>
     )

@@ -9,6 +9,15 @@ export default class MrBinAPI {
           someDate.getFullYear() == today.getFullYear()
     }
 
+    static sendNotificationSettings(settings) {
+        const options = {
+            method: "POST",
+            body: settings
+        }
+        return fetch(`${MrBinAPI.url}/notifications/settings/`, options)
+                .then(resp => resp.json())
+    }
+
     static searchForAnAddress(query) {
         return fetch(`https://api-adresse.data.gouv.fr/search/?q=${encodeURIComponent(query)}&limit=3`)
                 .then(resp => resp.json())

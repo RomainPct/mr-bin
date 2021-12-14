@@ -5,17 +5,15 @@ import TextBody from "../Text/TextBody"
 import TextBodyDetail from "../Text/TextBodyDetail"
 import RecyclableBinImage from "../../assets/images/icons/recyclable-bin.png"
 
-export default function NotificationCell({ color }) {
-
-    const [switchValue, setSwitchValue] = useState(true)
+export default function NotificationCell({ onToggle, available, enabled, color }) {
 
     return (
-        <View style={{ ...styles.box, backgroundColor: Colors.translateColor(color), opacity: switchValue ? 1 : 0.5 }}>
+        <View style={{ ...styles.box, backgroundColor: Colors.translateColor(color), opacity: available && enabled ? 1 : 0.5 }}>
             <View style={styles.headRow}>
                 <Image style={styles.binIcon} source={RecyclableBinImage} />
                 <Switch
-                    value={switchValue}
-                    onValueChange={value => setSwitchValue(value)}
+                    value={enabled}
+                    onValueChange={value => onToggle(value, color.class)}
                     thumbColor={Colors.translateColor(color)}
                     trackColor={{
                         false: Colors.white,
