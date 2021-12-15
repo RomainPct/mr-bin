@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react"
+import React, { useContext, useEffect, useState } from "react"
 import Constants from 'expo-constants'
 import { StyleSheet, View } from "react-native"
 import Colors from "../../Style/Colors"
@@ -8,9 +8,11 @@ import TextTitle from "../Text/TextTitle"
 import * as Notifications from 'expo-notifications';
 import MrBinAPI from "../../Managers/MrBinAPI"
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { AppContext } from "../../Context/AppContext"
 
 export default function NotificationSettingsView() {
 
+    const ctx = useContext(AppContext)
     const [pushToken, setPushToken] = useState(null)
     const [notifications, setNotifications] = useState([])
 
@@ -25,8 +27,10 @@ export default function NotificationSettingsView() {
 
     useEffect(_ => {
       if (pushToken == null) return
+      if (!ctx.location) return
       MrBinAPI.sendNotificationSettings({
         token: pushToken,
+        postalCode: ctx.location.postalCode,
         notifications: notifications
       })
         .then(result => console.log("Success : ", result))

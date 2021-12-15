@@ -14,6 +14,7 @@ export default class MrBinAPI {
             method: "POST",
             body: settings
         }
+        console.log(settings)
         return fetch(`${MrBinAPI.url}/notifications/settings/`, options)
                 .then(resp => resp.json())
     }
