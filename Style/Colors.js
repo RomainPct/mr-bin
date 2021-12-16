@@ -9,7 +9,7 @@ const Colors = {
         yellow: "#FFD363",
         green: "#93D076",
         blue: "#71AAFF",
-        red: "#EB6161",
+        red: "#EB6161"
     },
     translateColor: (color) => {
         switch (color.class) {

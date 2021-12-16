@@ -56,25 +56,20 @@ export default class MrBinAPI {
         return fetch(`${MrBinAPI.url}/horaires/${postalCode}`)
             .then(resp => resp.json())
             .then(json => {
-                const map = new Map()
-                json.forEach((item) => {
-                    item.passageDate = new Date(item.passage)
-                    const key = new Date(item.passageDate)
-                    key.setHours(12, 0, 0, 0)
-                    const collection = map.get(key)
-                    if (!collection) {
-                        map.set(key, [item]);
-                    } else {
-                        collection.push(item);
-                    }
-                })
                 const result = []
-                map.forEach((bins, date) => {
-                    result.push({
-                        title: MrBinAPI.isToday(date) ? "Aujourd'hui" : date.toLocaleDateString('fr-fr', { weekday: 'long', month: 'long', day: 'numeric' }),
-                        datetime: date,
-                        data: bins
-                    })
+                json.forEach(item => {
+                    item.passageDate = new Date(item.passage)
+                    const keyDate = new Date(item.passageDate)
+                    keyDate.setHours(12, 0, 0, 0)
+                    if (result.length > 0 && result[result.length - 1].datetime == keyDate.getTime()) {
+                        result[result.length - 1].data.push(item)
+                    } else {
+                        result.push({
+                            title: MrBinAPI.isToday(keyDate) ? "Aujourd'hui" : keyDate.toLocaleDateString('fr-fr', { weekday: 'long', month: 'long', day: 'numeric' }),
+                            datetime: keyDate.getTime(),
+                            data: [ item ]
+                        })
+                    }
                 })
                 return result
             })
