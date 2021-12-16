@@ -12,11 +12,14 @@ export default class MrBinAPI {
     static sendNotificationSettings(settings) {
         const options = {
             method: "POST",
-            body: settings
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(settings)
         }
-        console.log(settings)
-        return fetch(`${MrBinAPI.url}/notifications/settings/`, options)
-                .then(resp => resp.json())
+        return fetch(`${MrBinAPI.url}/notifications/settings`, options)
+                    .then(resp => resp.json())
     }
 
     static searchForAnAddress(query) {

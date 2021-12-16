@@ -33,11 +33,11 @@ export default function NotificationSettingsView() {
         postalCode: ctx.location.postalCode,
         notifications: notifications
       })
-        .then(result => console.log("Success : ", result))
+        .then(result => console.log("Success : ", JSON.stringify(result)))
         .catch(e => console.log("Error : ", e));
       (async () => {
           await AsyncStorage.setItem('@notifications', JSON.stringify(notifications))
-      })()
+      })();
     }, [pushToken, notifications])
 
     async function registerForPushNotificationsAsync() {
@@ -73,7 +73,7 @@ export default function NotificationSettingsView() {
       if (_enabled) {
         setNotifications([...notifications, _id])
       } else {
-        notifs = notifications.filter(value => value != _id)
+        let notifs = notifications.filter(value => value != _id)
         setNotifications(notifs)
       }
     }
