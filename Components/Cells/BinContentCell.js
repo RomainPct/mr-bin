@@ -7,7 +7,7 @@ export default function BinContentCell({ item }) {
 
     return (
         <View style={styles.cell}>
-            <Image style={styles.icon} source={item.icon} />
+            <Image style={styles.icon} source={{ url: item.icon}} resizeMode="contain" />
             <TextBodyDetail style={styles.label}>{item.label}</TextBodyDetail>
         </View>
     )
@@ -22,8 +22,7 @@ const styles = StyleSheet.create({
     icon: {
         width: "80%",
         marginHorizontal: "10%",
-        height: 32,
-        backgroundColor: Colors.lowGreen
+        height: 32
     },
     label: {
         textAlign: "center",

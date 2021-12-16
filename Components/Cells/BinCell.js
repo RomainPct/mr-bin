@@ -23,7 +23,7 @@ export default function BinCell({item, onPress, isOpen}) {
                     {isOpen ? 
                     <View style={styles.infoRow}>
                         <TextBodyDetail style={styles.subtitle}>Informations</TextBodyDetail>
-                        <TextBody style={styles.info}>💥 Le ramassage de la poubelle jaune se fait hebdomadairement sauf si jour férié.</TextBody>
+                        <TextBody style={styles.info}>{item.poubelles.description ?? item.poubelles.recyclable}</TextBody>
                         <TextBodyDetail style={styles.subtitle}>Que peut-on y jeter ?</TextBodyDetail>
                         <View style={styles.contentBox}>
                             {item.poubelles.contenues.map(content => (
